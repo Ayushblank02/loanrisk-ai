@@ -18,6 +18,44 @@ A **complete end-to-end Credit Risk Assessment System** that predicts whether a 
 
 ---
 
+## 📸 Application Screenshots
+
+### 📊 Data Loading & Exploratory Data Analysis
+
+![Data & EDA](assets/data_eda.png)
+
+---
+
+### ⚙️ Model Training Pipeline
+
+![Training Pipeline](assets/training_pipeline.png)
+
+---
+
+### 📈 Model Evaluation & Comparison
+
+![Model Comparison](assets/model_comparison.png)
+
+---
+
+### 🔍 Explainable AI with SHAP
+
+![SHAP Analysis](assets/shap_analysis.png)
+
+---
+
+### 🎯 Applicant Risk Prediction
+
+![Prediction Result](assets/prediction_result.png)
+
+---
+
+### 🧠 Why This Prediction? (SHAP Waterfall Explanation)
+
+![Prediction Explanation](assets/prediction_explanation.png)
+
+---
+
 ## 🚀 Quick Start
 
 ### 1. Install Dependencies
