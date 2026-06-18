@@ -158,3 +158,23 @@ Total demo time: ~5 minutes
 - `imbalanced-learn` — SMOTE
 - `shap` — explainability
 - `plotly` — interactive visualisations
+
+---
+
+## 👥 Contributors
+
+This project was developed collaboratively as a B.Tech Final Year Project.
+
+| Contributor      | GitHub Profile                      |
+| ---------------- | ----------------------------------- |
+| Ayush Srivastava | https://github.com/Ayushblank02     |
+| Kamal Mehta      | https://github.com/itskamalmehta    |
+| Garv Kumar       | https://github.com/Garv-Kumar       |
+| Anshuman Raj     | https://github.com/AnshumanRaj13    |
+| Piyush Prashar   | https://github.com/Piyushprashar777 |
+
+### Acknowledgement
+
+All contributors participated in the design, development, testing, documentation, and research associated with the LoanRisk AI project and its accompanying research work.
+
+---
