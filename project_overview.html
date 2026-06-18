@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LoanRisk AI — Project Overview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg:       #070B14;
+    --surface:  #0F172A;
+    --card:     #131D35;
+    --border:   rgba(99,102,241,0.2);
+    --accent:   #6366F1;
+    --accent2:  #10B981;
+    --accent3:  #F59E0B;
+    --danger:   #EF4444;
+    --text:     #E2E8F0;
+    --muted:    #64748B;
+    --glow:     rgba(99,102,241,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Background grid ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse at center, rgba(99,102,241,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(99,102,241,0.12);
+    border: 1px solid rgba(99,102,241,0.35);
+    color: #a5b4fc;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  h1.hero-title {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  h1.hero-title span { color: var(--accent); }
+  .hero-sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin: 1.2rem auto 0;
+    max-width: 540px;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  /* ── Pipeline ── */
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 3.5rem 0 1.2rem;
+  }
+
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .phase {
+    flex: 1;
+    min-width: 140px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-right: none;
+    padding: 1.4rem 1rem;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .phase:first-child { border-radius: 12px 0 0 12px; }
+  .phase:last-child  { border-radius: 0 12px 12px 0; border-right: 1px solid var(--border); }
+  .phase:hover { background: rgba(99,102,241,0.08); }
+
+  .phase::after {
+    content: '→';
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 1.2rem;
+    z-index: 2;
+  }
+  .phase:last-child::after { display: none; }
+
+  .phase-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+  .phase-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .phase-desc {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .phase-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  /* ── 3-col grid ── */
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+    animation: fadeUp 0.6s ease both;
+  }
+  .card:hover {
+    border-color: rgba(99,102,241,0.5);
+    transform: translateY(-2px);
+  }
+  .card-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+  .card-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.4rem; color: #a5b4fc; }
+  .card-body  { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── Stats row ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), #818cf8);
+  }
+  .stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.3rem;
+  }
+
+  /* ── Tech stack ── */
+  .tech-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+  }
+  .tech-pill {
+    background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.25);
+    color: #a5b4fc;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+    transition: background 0.2s;
+  }
+  .tech-pill:hover { background: rgba(99,102,241,0.22); }
+  .tech-pill.green  { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.25); color: #6ee7b7; }
+  .tech-pill.orange { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.25); color: #fcd34d; }
+  .tech-pill.red    { background: rgba(239,68,68,0.1);  border-color: rgba(239,68,68,0.25);  color: #fca5a5; }
+
+  /* ── File tree ── */
+  .file-tree {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    background: #070B14;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    line-height: 2;
+  }
+  .ft-dir  { color: #a5b4fc; }
+  .ft-file { color: #94a3b8; }
+  .ft-note { color: #475569; }
+
+  /* ── Demo Flow ── */
+  .demo-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .demo-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    transition: border-color 0.2s;
+  }
+  .demo-step:hover { border-color: rgba(16,185,129,0.4); }
+  .step-num {
+    background: rgba(99,102,241,0.2);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-text { font-size: 0.85rem; line-height: 1.5; }
+  .step-text strong { color: #a5b4fc; }
+  .step-text span { color: var(--muted); font-size: 0.78rem; }
+
+  /* ── Quick Start box ── */
+  .quickstart {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(16,185,129,0.05));
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 14px;
+    padding: 2rem;
+  }
+  .cmd {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent2);
+    margin: 0.5rem 0;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .cmd:hover { border-color: var(--accent); }
+
+  /* ── Metric comparison ── */
+  .metric-bar-row { display: flex; flex-direction: column; gap: 0.7rem; }
+  .metric-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+  .bar-label { width: 130px; color: var(--muted); flex-shrink: 0; }
+  .bar-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(99,102,241,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), #818cf8);
+    animation: growBar 1.2s ease both;
+    transform-origin: left;
+  }
+  .bar-fill.green  { background: linear-gradient(90deg, var(--accent2), #6ee7b7); }
+  .bar-fill.orange { background: linear-gradient(90deg, var(--accent3), #fcd34d); }
+  .bar-val { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text); width: 45px; text-align: right; }
+
+  @keyframes growBar {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 3rem 0 2rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+
+  @media (max-width: 768px) {
+    .grid3, .stats-row { grid-template-columns: 1fr 1fr; }
+    .grid2 { grid-template-columns: 1fr; }
+    .pipeline { gap: 0.5rem; flex-direction: column; }
+    .phase { border-right: 1px solid var(--border); border-bottom: none; border-radius: 10px; }
+    .phase::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -16px; transform: translateX(-50%); }
+    .phase:last-child::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <div class="hero-badge">B.Tech Final Year Project · ML + XAI + FinTech</div>
+    <h1 class="hero-title">🏦 LoanRisk<span> AI</span></h1>
+    <p class="hero-sub">A complete end-to-end Credit Risk Assessment System with SHAP-powered explainability</p>
+  </div>
+
+  <!-- ── Stats ── -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val">6</div><div class="stat-label">Pipeline Phases</div></div>
+    <div class="stat-card"><div class="stat-val">3</div><div class="stat-label">ML Models</div></div>
+    <div class="stat-card"><div class="stat-val">5</div><div class="stat-label">App Pages</div></div>
+    <div class="stat-card"><div class="stat-val">SHAP</div><div class="stat-label">Explainability</div></div>
+  </div>
+
+  <!-- ── Pipeline ── -->
+  <div class="section-label">6-Phase ML Pipeline</div>
+  <div class="pipeline">
+    <div class="phase">
+      <span class="phase-icon">📥</span>
+      <div class="phase-num">PHASE 01</div>
+      <div class="phase-title">Data & EDA</div>
+      <div class="phase-desc">Load CSV, impute nulls, cap outliers, distribution charts</div>
+    </div>
+    <div class="phase">
+      <span class="phase-icon">⚙️</span>
+      <div class="phase-num">PHASE 02</div>
+      <div class="phase-title">Feature Eng.</div>
+      <div class="phase-desc">DTI, credit util, installment-to-income, encode + scale</div>
+    </div>
+    <div class="phase">
+      <span class="phase-icon">⚖️</span>
+      <div class="phase-num">PHASE 03</div>
+      <div class="phase-title">SMOTE</div>
+      <div class="phase-desc">80/20 split → apply SMOTE on train only → balanced classes</div>
+    </div>
+    <div class="phase">
+      <span class="phase-icon">🤖</span>
+      <div class="phase-num">PHASE 04</div>
+      <div class="phase-title">Training</div>
+      <div class="phase-desc">LogReg baseline, Random Forest, XGBoost with tunable params</div>
+    </div>
+    <div class="phase">
+      <span class="phase-icon">📊</span>
+      <div class="phase-num">PHASE 05</div>
+      <div class="phase-title">Evaluation</div>
+      <div class="phase-desc">Recall · ROC-AUC · Confusion Matrix · Financial Impact</div>
+    </div>
+    <div class="phase">
+      <span class="phase-icon">🔍</span>
+      <div class="phase-num">PHASE 06</div>
+      <div class="phase-title">SHAP XAI</div>
+      <div class="phase-desc">Global importance + per-prediction waterfall + plain-English</div>
+    </div>
+  </div>
+
+  <!-- ── Models & Metrics ── -->
+  <div class="grid2" style="margin-top: 2rem;">
+    <div class="card">
+      <div class="card-icon">🤖</div>
+      <div class="card-title">Three-Model Comparison</div>
+      <div class="metric-bar-row" style="margin-top: 1rem;">
+        <div class="metric-bar">
+          <div class="bar-label">XGBoost</div>
+          <div class="bar-track"><div class="bar-fill" style="width:91%"></div></div>
+          <div class="bar-val">~0.91</div>
+        </div>
+        <div class="metric-bar">
+          <div class="bar-label">Random Forest</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:86%"></div></div>
+          <div class="bar-val">~0.86</div>
+        </div>
+        <div class="metric-bar">
+          <div class="bar-label">Logistic Reg.</div>
+          <div class="bar-track"><div class="bar-fill orange" style="width:74%"></div></div>
+          <div class="bar-val">~0.74</div>
+        </div>
+      </div>
+      <div class="card-body" style="margin-top: 1rem;">
+        Estimated ROC-AUC scores on Lending Club data.
+        XGBoost consistently outperforms on tabular financial data.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">💡</div>
+      <div class="card-title">Why Recall is the Primary Metric</div>
+      <div class="card-body">
+        <br>
+        <strong style="color:#EF4444">False Negative</strong> = Bank approves a defaulter
+        <br>→ Average loss: <strong style="color:#EF4444">~60% of loan value</strong>
+        <br><br>
+        <strong style="color:#F59E0B">False Positive</strong> = Bank rejects a good customer
+        <br>→ Average loss: <strong style="color:#F59E0B">~5% missed interest</strong>
+        <br><br>
+        Catching defaulters is <strong style="color:#a5b4fc">12× more important</strong> than avoiding false rejections.
+        Recall measures exactly this.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Key Design Decisions ── -->
+  <div class="section-label" style="margin-top: 3rem;">Key Design Decisions</div>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title">SMOTE, Not Random Oversampling</div>
+      <div class="card-body">Generates <em>realistic</em> synthetic defaulters using k-nearest neighbors in feature space. Applied only to training data — test set mirrors real-world distribution.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🧮</div>
+      <div class="card-title">Engineered Financial Ratios</div>
+      <div class="card-body">Raw columns aren't enough. DTI ratio, credit utilisation, installment-to-income, and loan-to-income capture the true financial burden on a borrower.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title">scale_pos_weight in XGBoost</div>
+      <div class="card-body">Even after SMOTE, XGBoost's <code style="color:#a5b4fc">scale_pos_weight=4</code> penalises false negatives more heavily during gradient descent training.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">SHAP for Legal Compliance</div>
+      <div class="card-body">Banks legally cannot deny a loan with only "AI said so." SHAP provides mathematically grounded, feature-level explanations that satisfy ECOA / GDPR requirements.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <div class="card-title">Financial Cost-Benefit Analysis</div>
+      <div class="card-body">Translates ML metrics into real dollar values. Shows examiners exactly how much money the model saves vs. the cost of false alarms.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚀</div>
+      <div class="card-title">Streamlit Over Flask/React</div>
+      <div class="card-body">Same visual result in 1/5th the code. One command to run. Examiners can interact with live predictions on any laptop without setup.</div>
+    </div>
+  </div>
+
+  <!-- ── File Structure ── -->
+  <div class="section-label" style="margin-top: 3rem;">Project Structure</div>
+  <div class="file-tree">
+    <div><span class="ft-dir">loan_default_predictor/</span></div>
+    <div>&nbsp;&nbsp;<span class="ft-file">app.py</span> &nbsp;&nbsp;<span class="ft-note">← Main Streamlit app (5 pages, ~450 lines)</span></div>
+    <div>&nbsp;&nbsp;<span class="ft-file">requirements.txt</span></div>
+    <div>&nbsp;&nbsp;<span class="ft-file">README.md</span></div>
+    <div>&nbsp;&nbsp;<span class="ft-dir">pipeline/</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">data_loader.py</span> &nbsp;&nbsp;<span class="ft-note">← Phase 1: EDA & cleaning</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">feature_engineering.py</span> &nbsp;&nbsp;<span class="ft-note">← Phase 2: DTI, encoding, scaling</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">imbalance.py</span> &nbsp;&nbsp;<span class="ft-note">← Phase 3: SMOTE</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">models.py</span> &nbsp;&nbsp;<span class="ft-note">← Phase 4: LR / RF / XGBoost</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">evaluation.py</span> &nbsp;&nbsp;<span class="ft-note">← Phase 5: Recall, ROC-AUC, cost-benefit</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">explainability.py</span> &nbsp;&nbsp;<span class="ft-note">← Phase 6: SHAP</span></div>
+    <div>&nbsp;&nbsp;<span class="ft-dir">data/</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">sample_data.py</span> &nbsp;&nbsp;<span class="ft-note">← Synthetic demo data generator</span></div>
+  </div>
+
+  <!-- ── Tech Stack ── -->
+  <div class="section-label" style="margin-top: 3rem;">Technology Stack</div>
+  <div class="card">
+    <div class="tech-grid">
+      <div class="tech-pill">streamlit</div>
+      <div class="tech-pill">pandas</div>
+      <div class="tech-pill">numpy</div>
+      <div class="tech-pill green">scikit-learn</div>
+      <div class="tech-pill green">xgboost</div>
+      <div class="tech-pill green">imbalanced-learn</div>
+      <div class="tech-pill orange">shap</div>
+      <div class="tech-pill orange">plotly</div>
+      <div class="tech-pill">joblib</div>
+      <div class="tech-pill">matplotlib</div>
+    </div>
+  </div>
+
+  <!-- ── Quick Start ── -->
+  <div class="section-label" style="margin-top: 3rem;">Quick Start</div>
+  <div class="quickstart">
+    <div class="card-title" style="margin-bottom: 1rem;">Get running in 2 commands</div>
+    <div class="cmd">pip install -r requirements.txt</div>
+    <div class="cmd">streamlit run app.py</div>
+    <div class="card-body" style="margin-top: 1rem;">
+      Then open <strong style="color:#a5b4fc">http://localhost:8501</strong> in your browser.
+      Click <strong style="color:#10B981">"Generate Demo Data"</strong> to start immediately — no Kaggle download needed.
+      <br><br>
+      For the real dataset: download <code style="color:#a5b4fc">accepted_2007_to_2018Q4.csv</code> from
+      <strong>kaggle.com/datasets/wordsforthewise/lending-club</strong> and upload via the app.
+    </div>
+  </div>
+
+  <!-- ── Demo Flow ── -->
+  <div class="section-label" style="margin-top: 3rem;">5-Minute Examiner Demo Script</div>
+  <div class="demo-steps">
+    <div class="demo-step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong>Data & EDA page</strong> → Click "Generate Demo Data" (5,000 records)<br>
+        <span>Show the class imbalance donut chart → explain why 80/20 split is a problem</span>
+      </div>
+    </div>
+    <div class="demo-step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <strong>Train Models page</strong> → Keep defaults, SMOTE enabled → click "Run Full Training Pipeline"<br>
+        <span>Show the before/after SMOTE bar chart — visually convincing for examiners</span>
+      </div>
+    </div>
+    <div class="demo-step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <strong>Evaluate & Compare page</strong> → Show ROC-AUC curves and Confusion Matrices<br>
+        <span>Highlight Recall as primary metric and explain the financial cost-benefit table</span>
+      </div>
+    </div>
+    <div class="demo-step">
+      <div class="step-num">4</div>
+      <div class="step-text">
+        <strong>Explain Prediction page</strong> → Click "Compute SHAP Values"<br>
+        <span>Show the global feature importance bar chart — FICO score, interest rate, DTI will top the list</span>
+      </div>
+    </div>
+    <div class="demo-step">
+      <div class="step-num">5</div>
+      <div class="step-text">
+        <strong>Predict Applicant page</strong> → Click "Fill Demo Applicant" → "Assess Credit Risk"<br>
+        <span>Show the SHAP waterfall chart + plain-English explanation. Ask an examiner to change the DTI and re-predict.</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end wrapper -->
+
+<footer>
+  LoanRisk AI · B.Tech Final Year Project · ML Pipeline + XGBoost + SHAP Explainability
+</footer>
+
+</body>
+</html>
